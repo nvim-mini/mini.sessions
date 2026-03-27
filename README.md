@@ -33,6 +33,7 @@ https://user-images.githubusercontent.com/24854248/173045087-3d18affc-c76f-4d22-
 - No automated new session creation. Use `MiniSessions.write()` manually.
 - Autoread default session (local if detected, else latest written global) if Neovim was called without intention to show something else.
 - Autowrite currently read session before quitting Neovim.
+- Restart Neovim preserving current session (requires Neovim>=0.12).
 - Configurable severity level of all actions.
 
 ## Installation

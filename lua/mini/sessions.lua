@@ -32,6 +32,8 @@
 --- - Autowrite currently read session before leaving it (quit Neovim or read
 ---   another session).
 ---
+--- - Restart Neovim preserving current session (requires Neovim>=0.12).
+---
 --- - Configurable severity level of all actions.
 ---
 --- # Setup ~
@@ -326,6 +328,33 @@ MiniSessions.delete = function(session_name, opts)
 
   -- Execute 'pre' hook
   H.possibly_execute(opts.hooks.post, data)
+end
+
+--- Restart Neovim preserving current session
+---
+--- Requires |:restart| command available on Neovim>=0.12.
+MiniSessions.restart = function()
+  if vim.fn.has('nvim-0.12') == 0 then return H.message('`restart()` requires Neovim>=0.12') end
+
+  -- Compute session to write and restore
+  local this_session, del_session = H.get_this_session(), nil
+  if this_session == '' then
+    local _, filename = vim.loop.fs_mkstemp('restart_session_XXXXXX')
+    this_session = vim.fs.abspath(filename)
+    del_session = this_session
+  end
+
+  -- Write session
+  local session_arg = vim.fn.fnameescape(this_session)
+  vim.cmd('mksession! ' .. session_arg)
+
+  -- Restart Neovim and execute Lua commands to restore necessary session
+  local after = { 'vim.cmd("source ' .. session_arg .. '")', 'vim.notify("(mini.sessions) Restarted")' }
+  if del_session ~= nil then
+    table.insert(after, 2, 'pcall(vim.fs.rm, ' .. vim.inspect(this_session) .. ')')
+    table.insert(after, 3, 'vim.v.this_session = ""')
+  end
+  vim.cmd('restart lua ' .. table.concat(after, ';'))
 end
 
 --- Select session interactively and perform action

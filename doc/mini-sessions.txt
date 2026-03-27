@@ -34,6 +34,8 @@ Features:
 - Autowrite currently read session before leaving it (quit Neovim or read
   another session).
 
+- Restart Neovim preserving current session (requires Neovim>=0.12).
+
 - Configurable severity level of all actions.
 
 # Setup ~
@@ -196,6 +198,13 @@ Parameters ~
     with session data argument before and after successful delete; overrides
     `MiniSessions.config.hooks.pre.delete` and
     `MiniSessions.config.hooks.post.delete`).
+
+------------------------------------------------------------------------------
+                                                        *MiniSessions.restart()*
+                            `MiniSessions.restart`()
+Restart Neovim preserving current session
+
+Requires |:restart| command available on Neovim>=0.12.
 
 ------------------------------------------------------------------------------
                                                          *MiniSessions.select()*
