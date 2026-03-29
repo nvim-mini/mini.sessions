@@ -349,7 +349,12 @@ MiniSessions.restart = function()
   vim.cmd('mksession! ' .. session_arg)
 
   -- Restart Neovim and execute Lua commands to restore necessary session
-  local after = { 'vim.cmd("source ' .. session_arg .. '")', 'vim.notify("(mini.sessions) Restarted")' }
+  local after = {
+    'vim.cmd("source ' .. session_arg .. '")',
+    -- Restore 'termguicolors' manually since it is not (yet) autodetected
+    'vim.o.termguicolors = ' .. tostring(vim.o.termguicolors),
+    'vim.notify("(mini.sessions) Restarted")',
+  }
   if del_session ~= nil then
     table.insert(after, 2, 'pcall(vim.fs.rm, ' .. vim.inspect(this_session) .. ')')
     table.insert(after, 3, 'vim.v.this_session = ""')
