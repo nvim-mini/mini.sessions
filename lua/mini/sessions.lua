@@ -341,7 +341,12 @@ end
 
 --- Restart Neovim preserving current session
 ---
---- Requires |:restart| command available on Neovim>=0.12.
+--- Write (active or new temporary) session, |:restart|, source the session.
+---
+--- Notes:
+--- - Requires Neovim>=0.12 for |:restart| command.
+--- - If there is no active session (|v:this_session|), |argument-list| is cleared
+---   for temporary session to not preserve it.
 MiniSessions.restart = function()
   if vim.fn.has('nvim-0.12') == 0 then return H.message('`restart()` requires Neovim>=0.12') end
 
@@ -358,6 +363,7 @@ MiniSessions.restart = function()
     local _, filename = vim.loop.fs_mkstemp('restart_session_XXXXXX')
     this_session = vim.fs.abspath(filename)
     del_session = this_session
+    vim.cmd('%argdelete')
   end
 
   -- Write session

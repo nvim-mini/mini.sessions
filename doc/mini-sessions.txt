@@ -204,7 +204,12 @@ Parameters ~
                             `MiniSessions.restart`()
 Restart Neovim preserving current session
 
-Requires |:restart| command available on Neovim>=0.12.
+Write (active or new temporary) session, |:restart|, source the session.
+
+Notes:
+- Requires Neovim>=0.12 for |:restart| command.
+- If there is no active session (|v:this_session|), |argument-list| is cleared
+  for temporary session to not preserve it.
 
 ------------------------------------------------------------------------------
                                                          *MiniSessions.select()*
